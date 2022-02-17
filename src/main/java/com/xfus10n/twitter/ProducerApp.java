@@ -1,7 +1,8 @@
 package com.xfus10n.twitter;
-import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import com.xfus10n.twitter.Utilz.Utilz;
+import com.xfus10n.twitter.twitter.StatusListenerImpl;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import twitter4j.*;

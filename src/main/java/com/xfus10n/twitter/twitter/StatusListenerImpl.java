@@ -1,4 +1,4 @@
-package com.xfus10n.twitter;
+package com.xfus10n.twitter.twitter;
 
 import twitter4j.StallWarning;
 import twitter4j.Status;

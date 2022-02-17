@@ -1,4 +1,4 @@
-package com.xfus10n.twitter;
+package com.xfus10n.twitter.Utilz;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;

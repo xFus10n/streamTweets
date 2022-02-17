@@ -1,12 +1,12 @@
 package UtilityTests;
 
 import com.xfus10n.twitter.propertiesReader.Reader;
-import com.xfus10n.twitter.propertiesReader.TwitterProperties;
+import com.xfus10n.twitter.domainz.TwitterProperties;
 import org.junit.Test;
 
 import java.util.Properties;
 
-import static com.xfus10n.twitter.propertiesReader.TwitterProperties.*;
+import static com.xfus10n.twitter.domainz.TwitterProperties.*;
 import static org.junit.Assert.assertEquals;
 
 public class ReaderTest {
