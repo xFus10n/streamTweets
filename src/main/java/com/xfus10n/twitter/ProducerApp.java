@@ -1,8 +1,12 @@
 package com.xfus10n.twitter;
+import java.util.Properties;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import com.xfus10n.twitter.Utilz.CLI;
 import com.xfus10n.twitter.Utilz.Utilz;
+import com.xfus10n.twitter.propertiesReader.Reader;
 import com.xfus10n.twitter.twitter.StatusListenerImpl;
+import org.apache.commons.cli.CommandLine;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import twitter4j.*;
@@ -13,8 +17,10 @@ import twitter4j.TwitterStream;
 public class ProducerApp {
     public static void main(String[] args) throws Exception {
         final LinkedBlockingQueue<Status> queue = new LinkedBlockingQueue<>(1000);
-
-//        if (!Utilz.argsAreGood(args)) return;
+        final CLI cli = new CLI();
+        CommandLine cmd = cli.CLIparser(args);
+        Properties tweeterProps = Reader.readProperties(cmd.getOptionValue("t"));
+        Properties producerProps = Reader.readProperties(cmd.getOptionValue("p"));
 
         String topicName = "tweets";//args[4];
         //String[] arguments = args.clone();
@@ -22,7 +28,7 @@ public class ProducerApp {
         String[] keyWords = {"winter"};
 
         // Create twitterstream using the configuration
-        TwitterStream twitterStream = Utilz.getTwitterStream();
+        TwitterStream twitterStream = Utilz.getTwitterStream(tweeterProps);
         StatusListener listener = new StatusListenerImpl(queue);
         twitterStream.addListener(listener);
 

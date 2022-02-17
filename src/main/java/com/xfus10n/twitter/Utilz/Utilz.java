@@ -1,5 +1,6 @@
 package com.xfus10n.twitter.Utilz;
 
+import com.xfus10n.twitter.domainz.TwitterProperties;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import twitter4j.TwitterStream;
@@ -38,11 +39,12 @@ public class Utilz {
         return new KafkaProducer<>(props);
     }
 
-    public static TwitterStream getTwitterStream(){
-        String consumerKey = "";//args[0];
-        String consumerSecret = ""; //args[1];
-        String accessToken = ""; //args[2];
-        String accessTokenSecret = ""; //args[3];
+    public static TwitterStream getTwitterStream(Properties properties){
+
+        String consumerKey = properties.getProperty(TwitterProperties.consumerKey.name());
+        String consumerSecret = properties.getProperty(TwitterProperties.consumerSecret.name());
+        String accessToken = properties.getProperty(TwitterProperties.accessToken.name());
+        String accessTokenSecret = properties.getProperty(TwitterProperties.accessTokenSecret.name());
 
         // Set twitter oAuth tokens in the configuration
         ConfigurationBuilder cb = new ConfigurationBuilder();
