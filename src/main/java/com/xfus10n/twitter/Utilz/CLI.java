@@ -10,7 +10,7 @@ public class CLI {
         return options;
     }
 
-    public CommandLine CLIparser(String[] args){
+    public CommandLine CLIparser(String[] args) throws ParseException {
         Options options = createOptions();
         CommandLineParser parser = new DefaultParser();
         try {
@@ -22,7 +22,7 @@ public class CLI {
             System.err.println("Parsing failed.  Reason: " + exp.getMessage());
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("tweeter streamer", options);
+            throw new ParseException("Failed to parse arguments");
         }
-        return null;
     }
 }
