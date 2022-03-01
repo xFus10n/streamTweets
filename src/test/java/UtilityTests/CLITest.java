@@ -31,12 +31,12 @@ public class CLITest {
 
     @Test
     public void readProxyTest() throws ParseException, URISyntaxException {
-        String[] args = {"-f","http://proxy.lvrix.atrema.deloitte.com:3128","-t","src/test/resources/twitter.properties"};
+        String[] args = {"-f","http://some.host.com:8080","-t","src/test/resources/twitter.properties"};
         CLI cli = new CLI();
         CommandLine commandLine = cli.CLIparser(args);
         String proxy = commandLine.getOptionValue("f");
         URI uri = new URI(proxy);
-        assertEquals(3128, uri.getPort());
-        assertEquals("proxy.lvrix.atrema.deloitte.com", uri.getHost());
+        assertEquals(8080, uri.getPort());
+        assertEquals("some.host.com", uri.getHost());
     }
 }
