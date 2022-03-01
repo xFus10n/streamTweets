@@ -39,6 +39,10 @@ public class Utilz {
         return new KafkaProducer<>(props);
     }
 
+    public static Producer<String, String> getKafkaProducer(Properties properties) {
+        return new KafkaProducer<>(properties);
+    }
+
     public static TwitterStream getTwitterStream(Properties properties){
 
         String consumerKey = properties.getProperty(TwitterProperties.consumerKey.name());

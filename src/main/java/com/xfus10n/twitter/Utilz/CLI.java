@@ -7,6 +7,7 @@ public class CLI {
         Options options = new Options();
         options.addRequiredOption("t","tweeter", true, "path to file -> tokens for tweeter streaming");
         options.addOption("p","producer", true, "path to file -> properties for kafka producer");
+        options.addOption("d","topic", true, "topic name, when omit = default");
         return options;
     }
 

@@ -15,17 +15,24 @@ import twitter4j.StatusListener;
 import twitter4j.TwitterStream;
 
 public class ProducerApp {
+    private final static LinkedBlockingQueue<Status> queue = new LinkedBlockingQueue<>(1000);
+    private static Producer<String, String> producer;
+
     public static void main(String[] args) throws Exception {
-        final LinkedBlockingQueue<Status> queue = new LinkedBlockingQueue<>(1000);
+
         final CLI cli = new CLI();
         CommandLine cmd = cli.CLIparser(args);
         Properties tweeterProps = Reader.readProperties(cmd.getOptionValue("t"));
-        Properties producerProps = Reader.readProperties(cmd.getOptionValue("p"));
 
-        String topicName = "tweets";//args[4];
-        //String[] arguments = args.clone();
-        //String[] keyWords = Arrays.copyOfRange(arguments, 5, arguments.length);
-        String[] keyWords = {"winter"};
+        String topicName = "default";
+        if (cmd.hasOption("d")) topicName = cmd.getOptionValue("d");
+        if (cmd.hasOption("p")) {
+            Properties kafkaProps = Reader.readProperties(cmd.getOptionValue("p"));
+            producer = Utilz.getKafkaProducer(kafkaProps);
+        }
+
+
+        String[] keyWords = {"latvija"};
 
         // Create twitterstream using the configuration
         TwitterStream twitterStream = Utilz.getTwitterStream(tweeterProps);
@@ -36,7 +43,7 @@ public class ProducerApp {
         FilterQuery query = new FilterQuery().track(keyWords);
         twitterStream.filter(query);
 
-        final Producer<String, String> producer = Utilz.getKafkaProducer();
+
         int j = 0;
 
         // poll for new tweets in the queue. If new tweets are added, send them
@@ -49,9 +56,9 @@ public class ProducerApp {
                 // i++;
             } else {
                 for (HashtagEntity hashtage : ret.getHashtagEntities()) {
-//                    System.out.println("Tweet:" + ret);
+                    System.out.println("Tweet:" + ret);
                     System.out.println("Hashtag: " + hashtage.getText());
-                    producer.send(new ProducerRecord<>(topicName, Integer.toString(j++), ret.getText()));
+                    if (producer != null) producer.send(new ProducerRecord<>(topicName, Integer.toString(j++), ret.getText()));
                 }
             }
         }
