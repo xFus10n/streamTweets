@@ -8,6 +8,7 @@ public class CLI {
         options.addRequiredOption("t","tweeter", true, "path to file -> tokens for tweeter streaming");
         options.addOption("p","producer", true, "path to file -> properties for kafka producer");
         options.addOption("d","topic", true, "topic name, when omit = default");
+        options.addOption("f","proxy", true, "set proxy url");
         return options;
     }
 
