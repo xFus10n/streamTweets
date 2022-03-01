@@ -11,7 +11,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.apache.log4j.PropertyConfigurator;
 import twitter4j.*;
 import twitter4j.Status;
