@@ -47,26 +47,27 @@ public class ProducerApp {
         twitterStream.filter(query);
 
 
-        int j = 0;
+        int j = 0; //id
+        try {
+            while (true) {
+                Status ret = queue.poll();
 
-        // poll for new tweets in the queue. If new tweets are added, send them
-        // to the topic
-        while (true) {
-            Status ret = queue.poll();
-
-            if (ret == null) {
-                Thread.sleep(100);
-                // i++;
-            } else {
-                for (HashtagEntity hashtage : ret.getHashtagEntities()) {
-                    System.out.println("Tweet:" + ret);
-                    System.out.println("Hashtag: " + hashtage.getText());
-                    if (producer != null) producer.send(new ProducerRecord<>(topicName, Integer.toString(j++), ret.getText()));
+                if (ret == null) {
+                    Thread.sleep(100);
+                    // i++;
+                } else {
+                    for (HashtagEntity hashtage : ret.getHashtagEntities()) {
+                        System.out.println("Tweet:" + ret);
+                        System.out.println("Hashtag: " + hashtage.getText());
+                        if (producer != null) producer.send(new ProducerRecord<>(topicName, Integer.toString(j++), ret.getText()));
+                    }
                 }
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         // producer.close();
         // Thread.sleep(500);
-        // twitterStream.shutdown();
+         twitterStream.shutdown();
     }
 }
