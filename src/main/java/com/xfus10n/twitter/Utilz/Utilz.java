@@ -3,10 +3,13 @@ package com.xfus10n.twitter.Utilz;
 import com.xfus10n.twitter.domainz.TwitterProperties;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
+import scala.util.parsing.combinator.testing.Str;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 public class Utilz {
@@ -43,7 +46,7 @@ public class Utilz {
         return new KafkaProducer<>(properties);
     }
 
-    public static TwitterStream getTwitterStream(Properties properties){
+    public static TwitterStream getTwitterStream(Properties properties, String proxy) throws URISyntaxException {
 
         String consumerKey = properties.getProperty(TwitterProperties.consumerKey.name());
         String consumerSecret = properties.getProperty(TwitterProperties.consumerSecret.name());
@@ -55,16 +58,14 @@ public class Utilz {
         cb.setDebugEnabled(true).setOAuthConsumerKey(consumerKey).setOAuthConsumerSecret(consumerSecret)
                 .setOAuthAccessToken(accessToken).setOAuthAccessTokenSecret(accessTokenSecret);
 
+        if (!proxy.equals("")) {
+            URI uri = new URI(proxy);
+            String proxyHost = uri.getHost();
+            int proxyPort = uri.getPort();
+            cb.setHttpProxyHost(proxyHost).setHttpProxyPort(proxyPort);
+        }
+
         // Create twitterstream using the configuration
         return new TwitterStreamFactory(cb.build()).getInstance();
-    }
-
-    public static boolean argsAreGood(String[] args) {
-        if (args.length < 4) {
-            System.out.println(
-                    "Usage: KafkaTwitterProducer <twitter-consumer-key> <twitter-consumer-secret> <twitter-access-token> <twitter-access-token-secret> <topic-name> <twitter-search-keywords>");
-            return false;
-        }
-        return true;
     }
 }
