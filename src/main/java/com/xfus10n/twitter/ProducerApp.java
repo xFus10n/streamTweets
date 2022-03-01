@@ -10,6 +10,9 @@ import com.xfus10n.twitter.twitter.StatusListenerImpl;
 import org.apache.commons.cli.CommandLine;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
+import org.apache.log4j.PropertyConfigurator;
 import twitter4j.*;
 import twitter4j.Status;
 import twitter4j.StatusListener;
@@ -23,6 +26,9 @@ public class ProducerApp {
 
         final CLI cli = new CLI();
         CommandLine cmd = cli.CLIparser(args);
+        PropertyConfigurator.configure("src/test/resources/log4j.properties");
+        Logger logger = Logger.getLogger("log4j.rootLogger");
+
         Properties tweeterProps = Reader.readProperties(cmd.getOptionValue("t"));
 
         String topicName = "default";
@@ -33,7 +39,7 @@ public class ProducerApp {
         }
 
         String proxy = "";
-        if (cmd.hasOption("f"))  proxy = cmd.getOptionValue("f");
+        if (cmd.hasOption("f")) proxy = cmd.getOptionValue("f");
 
         String[] keyWords = {"spring"}; //can be multiple
 
@@ -57,8 +63,8 @@ public class ProducerApp {
                     // i++;
                 } else {
                     for (HashtagEntity hashtage : ret.getHashtagEntities()) {
-                        System.out.println("Tweet:" + ret);
-                        System.out.println("Hashtag: " + hashtage.getText());
+                        logger.info("Hashtag: " + hashtage.getText());
+                        logger.info("Tweet:" + ret);
                         if (producer != null) producer.send(new ProducerRecord<>(topicName, Integer.toString(j++), ret.getText()));
                     }
                 }
@@ -66,8 +72,8 @@ public class ProducerApp {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        // producer.close();
-        // Thread.sleep(500);
-         twitterStream.shutdown();
+
+        if (producer != null) producer.close();
+        twitterStream.shutdown();
     }
 }
