@@ -1,5 +1,6 @@
 package com.xfus10n.twitter;
 
+import java.net.URL;
 import java.util.Properties;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -25,7 +26,11 @@ public class ProducerApp {
 
         final CLI cli = new CLI();
         CommandLine cmd = cli.CLIparser(args);
-        PropertyConfigurator.configure("src/main/java/com/xfus10n/twitter/logging/log4j.properties");
+
+        /* logging */
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        URL log4j = loader.getResource("log4j.properties");
+        PropertyConfigurator.configure(log4j);
         Logger logger = Logger.getLogger("log4j.rootLogger");
 
         Properties tweeterProps = Reader.readProperties(cmd.getOptionValue("t"));
