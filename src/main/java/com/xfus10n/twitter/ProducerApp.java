@@ -68,7 +68,7 @@ public class ProducerApp {
                 } else {
                     for (HashtagEntity hashtage : ret.getHashtagEntities()) {
                         logger.info("Hashtag: " + hashtage.getText());
-                        logger.info("Tweet:" + ret);
+                        logger.info("Tweet:" + ret.getText());
                         if (producer != null) producer.send(new ProducerRecord<>(topicName, Integer.toString(j++), ret.getText()));
                     }
                 }
