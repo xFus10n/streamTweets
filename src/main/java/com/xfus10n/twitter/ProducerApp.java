@@ -69,7 +69,7 @@ public class ProducerApp {
                 }
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.info("system shutdown");
         }
 
         if (producer != null) producer.close();
