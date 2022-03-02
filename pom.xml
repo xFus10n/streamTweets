@@ -69,6 +69,7 @@
                     <target>8</target>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -84,55 +85,6 @@
                             <outputDirectory>${project.build.directory}/libs</outputDirectory>
                             <includeScope>runtime</includeScope>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- Use build-helper-maven-plugin to add Scala source and test source directories -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <id>add-source</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/main/java</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>add-test-source</id>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>add-test-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/test/java</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- Use scala-maven-plugin for Scala support -->
-            <plugin>
-                <groupId>net.alchim31.maven</groupId>
-                <artifactId>scala-maven-plugin</artifactId>
-                <version>3.2.2</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <!-- Need to specify this explicitly, otherwise plugin won't be called when doing e.g. mvn compile -->
-                            <goal>compile</goal>
-                            <goal>testCompile</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>

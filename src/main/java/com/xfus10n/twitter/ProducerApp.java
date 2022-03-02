@@ -25,7 +25,7 @@ public class ProducerApp {
 
         final CLI cli = new CLI();
         CommandLine cmd = cli.CLIparser(args);
-        PropertyConfigurator.configure("src/test/resources/log4j.properties");
+        PropertyConfigurator.configure("src/main/java/com/xfus10n/twitter/logging/log4j.properties");
         Logger logger = Logger.getLogger("log4j.rootLogger");
 
         Properties tweeterProps = Reader.readProperties(cmd.getOptionValue("t"));
