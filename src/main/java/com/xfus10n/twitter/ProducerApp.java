@@ -21,6 +21,7 @@ import twitter4j.TwitterStream;
 public class ProducerApp {
     private final static LinkedBlockingQueue<Status> queue = new LinkedBlockingQueue<>(1000);
     private static Producer<String, String> producer;
+    private static TwitterStream twitterStream;
 
     public static void main(String[] args) throws Exception {
 
@@ -48,7 +49,7 @@ public class ProducerApp {
         String[] keyWords = {"spring"}; //can be multiple
 
         // Create twitterstream using the configuration
-        TwitterStream twitterStream = Utilz.getTwitterStream(tweeterProps, proxy);
+        twitterStream = Utilz.getTwitterStream(tweeterProps, proxy);
         StatusListener listener = new StatusListenerImpl(queue);
         twitterStream.addListener(listener);
 
@@ -56,6 +57,9 @@ public class ProducerApp {
         FilterQuery query = new FilterQuery().track(keyWords);
         twitterStream.filter(query);
 
+        /* shutdown */
+        Thread shutdownHook = new Thread(()-> shutDown(logger, false));
+        Runtime.getRuntime().addShutdownHook(shutdownHook);
 
         int j = 0; //id
         try {
@@ -64,7 +68,6 @@ public class ProducerApp {
 
                 if (ret == null) {
                     Thread.sleep(100);
-                    // i++;
                 } else {
                     for (HashtagEntity hashtage : ret.getHashtagEntities()) {
                         logger.info("Hashtag: " + hashtage.getText());
@@ -74,10 +77,15 @@ public class ProducerApp {
                 }
             }
         } catch (InterruptedException e) {
-            logger.info("system shutdown");
+            logger.error(e.getMessage());
+        } finally {
+            shutDown(logger, true);
         }
+    }
 
+    private static void shutDown(Logger logger, boolean all){
+        logger.info("System shutdown");
         if (producer != null) producer.close();
-        twitterStream.shutdown();
+        if (all) twitterStream.shutdown();
     }
 }
