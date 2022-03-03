@@ -61,7 +61,6 @@ public class ProducerApp {
         Thread shutdownHook = new Thread(()-> shutDown(logger, false));
         Runtime.getRuntime().addShutdownHook(shutdownHook);
 
-        int j = 0; //id
         try {
             while (true) {
                 Status ret = queue.poll();
@@ -72,7 +71,7 @@ public class ProducerApp {
                     for (HashtagEntity hashtage : ret.getHashtagEntities()) {
                         logger.info("Hashtag: " + hashtage.getText());
                         logger.info("Tweet:" + ret.getText());
-                        if (producer != null) producer.send(new ProducerRecord<>(topicName, Integer.toString(j++), ret.getText()));
+                        if (producer != null) producer.send(new ProducerRecord<>(topicName, ret.getText())); //think of key or partition
                     }
                 }
             }
