@@ -21,7 +21,6 @@ import twitter4j.TwitterStream;
 public class ProducerApp {
     private final static LinkedBlockingQueue<Status> queue = new LinkedBlockingQueue<>(1000);
     private static Producer<String, String> producer;
-    private static TwitterStream twitterStream;
 
     public static void main(String[] args) throws Exception {
 
@@ -49,7 +48,7 @@ public class ProducerApp {
         String[] keyWords = {"spring"}; //can be multiple
 
         // Create twitterstream using the configuration
-        twitterStream = Utilz.getTwitterStream(tweeterProps, proxy);
+        TwitterStream twitterStream = Utilz.getTwitterStream(tweeterProps, proxy);
         StatusListener listener = new StatusListenerImpl(queue);
         twitterStream.addListener(listener);
 
@@ -58,33 +57,23 @@ public class ProducerApp {
         twitterStream.filter(query);
 
         /* shutdown */
-        Thread shutdownHook = new Thread(()-> shutDown(logger, false));
+        Thread shutdownHook = new Thread(()-> shutDown(logger));
         Runtime.getRuntime().addShutdownHook(shutdownHook);
 
-        try {
-            while (true) {
+        while (true) {
+            if (!queue.isEmpty()) {
                 Status ret = queue.poll();
-
-                if (ret == null) {
-                    Thread.sleep(100);
-                } else {
-                    for (HashtagEntity hashtage : ret.getHashtagEntities()) {
-                        logger.info("Hashtag: " + hashtage.getText());
-                        logger.info("Tweet:" + ret.getText());
-                        if (producer != null) producer.send(new ProducerRecord<>(topicName, ret.getText())); //think of key or partition
-                    }
+                for (HashtagEntity hashtage : ret.getHashtagEntities()) {
+                    logger.info("Hashtag: " + hashtage.getText());
+                    logger.info("Tweet:" + ret.getText());
+                    if (producer != null) producer.send(new ProducerRecord<>(topicName, ret.getText())); //think of key or partition
                 }
             }
-        } catch (InterruptedException e) {
-            logger.error(e.getMessage());
-        } finally {
-            shutDown(logger, true);
         }
     }
 
-    private static void shutDown(Logger logger, boolean all){
+    private static void shutDown(Logger logger){
         logger.info("System shutdown");
         if (producer != null) producer.close();
-        if (all) twitterStream.shutdown();
     }
 }
