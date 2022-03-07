@@ -25,7 +25,7 @@ public class ProducerApp {
     public static void main(String[] args) throws Exception {
 
         final CLI cli = new CLI();
-        CommandLine cmd = cli.CLIparser(args);
+        CommandLine cmd = cli.parser(args);
 
         /* logging */
         ClassLoader loader = Thread.currentThread().getContextClassLoader();

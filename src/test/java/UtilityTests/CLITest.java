@@ -15,7 +15,7 @@ public class CLITest {
     public void testCLIoptions() throws ParseException {
         String[] args = {"-t","src/test/resources/twitter.properties"};
         CLI cli = new CLI();
-        CommandLine commandLine = cli.CLIparser(args);
+        CommandLine commandLine = cli.parser(args);
         assertEquals("src/test/resources/twitter.properties", commandLine.getOptionValue("t"));
         assertFalse(commandLine.hasOption("p"));
         assertTrue(commandLine.hasOption("t"));
@@ -25,7 +25,7 @@ public class CLITest {
     public void testCLIoptionsFail() {
         String[] args = {"-p","src/test/resources/kProducer.properties"};
         CLI cli = new CLI();
-        ParseException exception = assertThrows(ParseException.class, () -> cli.CLIparser(args));
+        ParseException exception = assertThrows(ParseException.class, () -> cli.parser(args));
         assertEquals("Failed to parse arguments", exception.getMessage());
     }
 
@@ -33,7 +33,7 @@ public class CLITest {
     public void readProxyTest() throws ParseException, URISyntaxException {
         String[] args = {"-f","http://some.host.com:8080","-t","src/test/resources/twitter.properties"};
         CLI cli = new CLI();
-        CommandLine commandLine = cli.CLIparser(args);
+        CommandLine commandLine = cli.parser(args);
         String proxy = commandLine.getOptionValue("f");
         URI uri = new URI(proxy);
         assertEquals(8080, uri.getPort());

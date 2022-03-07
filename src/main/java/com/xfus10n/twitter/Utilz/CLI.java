@@ -5,14 +5,15 @@ import org.apache.commons.cli.*;
 public class CLI {
     private Options createOptions(){
         Options options = new Options();
-        options.addRequiredOption("t","tweeter", true, "path to file -> tokens for tweeter streaming");
-        options.addOption("p","producer", true, "path to file -> properties for kafka producer");
-        options.addOption("d","topic", true, "topic name, when omit = default");
-        options.addOption("f","proxy", true, "set proxy url");
+        options.addRequiredOption("t","tweeter", true, "path to file -> tokens for tweeter streaming (mandatory)");
+        options.addOption("p","producer", true, "path to file -> properties for kafka producer (optional)");
+        options.addOption("d","topic", true, "topic name, when omit = default (optional)");
+        options.addOption("f","proxy", true, "set proxy url (optional)");
+        options.addOption("k","keywords", true, "keywords delimited by comma (optional)");
         return options;
     }
 
-    public CommandLine CLIparser(String[] args) throws ParseException {
+    public CommandLine parser(String[] args) throws ParseException {
         Options options = createOptions();
         CommandLineParser parser = new DefaultParser();
         try {
