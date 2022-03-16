@@ -45,7 +45,8 @@ public class ProducerApp {
         String proxy = "";
         if (cmd.hasOption("f")) proxy = cmd.getOptionValue("f");
 
-        String[] keyWords = {"spring"}; //can be multiple
+        String[] keyWords = {"#"};
+        if (cmd.hasOption("k")) keyWords = cmd.getOptionValue("k").replaceAll(" ", "").split(",");
 
         // Create twitterstream using the configuration
         TwitterStream twitterStream = Utilz.getTwitterStream(tweeterProps, proxy);

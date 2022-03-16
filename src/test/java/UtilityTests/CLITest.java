@@ -4,6 +4,7 @@ import com.xfus10n.twitter.Utilz.CLI;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.junit.Test;
+import scala.util.parsing.combinator.testing.Str;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -38,5 +39,18 @@ public class CLITest {
         URI uri = new URI(proxy);
         assertEquals(8080, uri.getPort());
         assertEquals("some.host.com", uri.getHost());
+    }
+
+    @Test
+    public void testReadStringToArray() throws ParseException {
+        String keywords = " winter , spring , summer , autumn ";
+        String[] args = {"-t","src/test/resources/twitter.properties", "-k", keywords};
+        CLI cli = new CLI();
+        CommandLine commandLine = cli.parser(args);
+        assertTrue(commandLine.hasOption("k"));
+        assertEquals(keywords, commandLine.getOptionValue("k"));
+        String output = commandLine.getOptionValue("k");
+        String[] keywordsArr = output.replaceAll(" ", "").split(",");
+        System.out.println(String.join("_", keywordsArr));
     }
 }
