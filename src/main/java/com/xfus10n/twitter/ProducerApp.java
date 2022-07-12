@@ -18,8 +18,8 @@ import twitter4j.Status;
 import twitter4j.StatusListener;
 import twitter4j.TwitterStream;
 
-public class ProducerApp {
-    private final static LinkedBlockingQueue<Status> queue = new LinkedBlockingQueue<>(1000);
+public final class ProducerApp {
+    private static final LinkedBlockingQueue<Status> queue = new LinkedBlockingQueue<>(1000);
     private static Producer<String, String> producer;
 
     public static void main(String[] args) throws Exception {
@@ -48,7 +48,7 @@ public class ProducerApp {
         String[] keyWords = {"#"};
         if (cmd.hasOption("k")) keyWords = cmd.getOptionValue("k").replaceAll(" ", "").split(",");
 
-        // Create twitterstream using the configuration
+        // Create twitter stream using the configuration
         TwitterStream twitterStream = Utilz.getTwitterStream(tweeterProps, proxy);
         StatusListener listener = new StatusListenerImpl(queue);
         twitterStream.addListener(listener);
@@ -67,7 +67,7 @@ public class ProducerApp {
                 for (HashtagEntity hashtage : ret.getHashtagEntities()) {
                     logger.info("Hashtag: " + hashtage.getText());
                     logger.info("Tweet:" + ret.getText());
-                    if (producer != null) producer.send(new ProducerRecord<>(topicName, ret.getText())); //think of key or partition
+                    if (producer != null) producer.send(new ProducerRecord<>(topicName, hashtage.getText(), ret.getText())); //think of key or partition
                 }
             }
         }
